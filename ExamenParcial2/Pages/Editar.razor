@@ -1,5 +1,63 @@
-﻿<h3>Editar</h3>
+﻿@page "/edicion/{tamanio}"
+@inject HttpClient http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavigationManager
+
+<h3>Editar</h3>
+
+<EditForm Model="@electronicos" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="Titulo">Ingrese Titulo:</label>
+        <InputText id="Titulo" @bind-Value="electronicos.Titulo" class="form-control" />
+        <ValidationMessage For="() => electronicos.Titulo" />
+    </div>
+    <div class="form-group">
+        <label for="Autor">Ingrese Autor:</label>
+        <InputText id="Autor" @bind-Value="electronicos.Autor" class="form-control" />
+        <ValidationMessage For="() => electronicos.Autor" />
+    </div>
+    <div class="form-group">
+        <label for="Genero">Ingrese Genero:</label>
+        <InputText id="Genero" @bind-Value="electronicos.Genero" class="form-control" />
+        <ValidationMessage For="() => electronicos.Genero" />
+    </div>
+    <div class="form-group">
+        <label for="Publicacion">Ingrese Publicacion:</label>
+        <InputNumber id="Publicaion" @bind-Value="electronicos.Publicacion" class="form-control" />
+        <ValidationMessage For="() => electronicos.Publicacion" />
+    </div>
+    <div class="form-group">
+        <label for="Formato">Ingrese Formato:</label>
+        <InputText id="Formato" @bind-Value="electronicos.Formato" class="form-control" />
+        <ValidationMessage For="() => electronicos.Formato" />
+    </div>
+    <div class="form-group">
+        <label for="Tamanio">Ingrese Tamanio:</label>
+        <InputText id="Tamanio" @bind-Value="electronicos.Tamanio" class="form-control" />
+        <ValidationMessage For="() => electronicos.Tamanio" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</EditForm>
 
 @code {
+    private Electronicos electronicos = new Electronicos();
+    List<Electronicos> elec = new List<Electronicos>();
+    [Parameter]
+    public string Tamanio { get; set; }
+    protected async Task Guardar()
+    {
+        await localStorage.SetItemAsync("electronicos", elec);
+        NavigationManager.NavigateTo("/ingreso-libros");
 
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        elec = await localStorage.GetItemAsync<List<Electronicos>>("electronicos");
+
+        electronicos = elec.FirstOrDefault(c => c.Tamanio == Tamanio);
+    }
 }

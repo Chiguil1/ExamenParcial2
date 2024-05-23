@@ -90,7 +90,7 @@
     }
     protected override async Task OnInitializedAsync()
     {
-        //elec = await localStorage.GetItemAsync<List<Electronicos>>("electronicos");
+        elec = await localStorage.GetItemAsync<List<Electronicos>>("electronicos");
     }
 
     protected async Task Borrar(string Tamanio)
